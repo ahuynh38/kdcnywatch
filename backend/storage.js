@@ -31,6 +31,10 @@ export function getPlayers() {
 export function addPlayer(battletag) {
   const players = getPlayers();
 
+  if (players.length >= 20) {
+    throw new Error('Player limit reached.');
+  }
+
   if (players.includes(battletag)) {
     throw new Error(`Player ${battletag} is already being tracked.`);
   }
