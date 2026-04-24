@@ -25,22 +25,22 @@ A personal full-stack dashboard for tracking and comparing Overwatch stats acros
 ## Tech Stack
 
 ### Frontend
-- **React** — component-based UI
-- **Vite** — fast dev server and build tool
-- **Recharts** — data visualization and interactive bar charts
-- **Axios** — HTTP client for backend communication
-- **CSS Modules** — scoped, modular styling
-- **Barlow** — Google Font matching Overwatch's aesthetic
+- **React** - component-based UI
+- **Vite** - fast dev server and build tool
+- **Recharts** - data visualization and interactive bar charts
+- **Axios** - HTTP client for backend communication
+- **CSS Modules** - scoped, modular styling
+- **Barlow** - Google Font matching Overwatch's aesthetic
 
 ### Backend
-- **Node.js** — JavaScript runtime
-- **Express** — REST API server
-- **OverFast API** — unofficial Overwatch stats API
-- **JSON file storage** — lightweight data persistence for player list and cached stats
+- **Node.js** - JavaScript runtime
+- **Express** - REST API server
+- **OverFast API** - unofficial Overwatch stats API
+- **JSON file storage** - lightweight data persistence for player list and cached stats
 
 ### Infrastructure
-- **Vercel** — frontend hosting with automatic GitHub deploys
-- **Render** — backend hosting
+- **Vercel** - frontend hosting with automatic GitHub deploys
+- **Render** - backend hosting
 
 ---
 
@@ -56,7 +56,7 @@ Frontend (Vercel)
                             └── stats.json (cached stat data)
 ```
 
-The backend acts as a proxy and cache layer — it fetches data from the OverFast API on demand and stores the results locally, so the frontend always reads from fast cached data rather than hitting the upstream API directly on every load.
+The backend acts as a proxy and cache layer. It fetches data from the OverFast API on demand and stores the results locally, so the frontend always reads from fast cached data rather than hitting the upstream API directly on every load.
 
 ---
 
