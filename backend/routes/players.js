@@ -24,6 +24,7 @@ router.get('/stats', (req, res) => {
     const stats = getStats();
     res.json(stats);
   } catch (err) {
+    console.error('Error getting stats:', err);
     res.status(500).json({ error: err.message });
   }
 });
