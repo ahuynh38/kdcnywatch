@@ -35,7 +35,7 @@ function formatValue(value, key) {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function StatsTable({ stats }) {
+export default function StatsTable({ stats, selectedStat, onStatSelect }) {
   const entries = Object.entries(stats);
   const battletags = entries.map(([tag]) => tag);
   const players = entries.map(([, player]) => player);
@@ -62,7 +62,11 @@ export default function StatsTable({ stats }) {
             const bestIdx = getBestIndex(values, higherIsBetter);
 
             return (
-              <tr key={key} className="stats-table__row">
+              <tr
+                key={key}
+                className={`stats-table__row${key === selectedStat ? ' stats-table__row--selected' : ''}`}
+                onClick={() => onStatSelect(key)}
+              >
                 <td className="stats-table__label">{label}</td>
                 {values.map((value, idx) => (
                   <td
