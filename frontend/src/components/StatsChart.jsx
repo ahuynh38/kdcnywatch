@@ -52,7 +52,7 @@ function CustomXTick({ x, y, payload, stats }) {
             y={size / 2 + 14}
             textAnchor="start"
             fontSize={13}
-            fill="ccc"
+            fill="#e8eaf0"
           >
             {payload.value}
           </text>
@@ -87,6 +87,7 @@ export default function StatsChart({ stats, selectedStat }) {
           <Tooltip
             formatter={(value) => formatValue(value, selectedStat)}
             cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+            labelStyle={{ color: '#0f1117'}}
           />
           <Bar dataKey="value" radius={[4, 4, 0, 0]} fill={BAR_DEFAULT}>
             <LabelList
