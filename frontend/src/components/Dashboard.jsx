@@ -4,6 +4,7 @@ import PlayerGrid from '../components/PlayerGrid.jsx';
 import StatsTable from '../components/StatsTable.jsx';
 import StatsChart from '../components/StatsChart.jsx';
 import AddPlayer from '../components/AddPlayer.jsx';
+import RemovePlayer from './RemovePlayer.jsx';
 import LastUpdated from '../components/LastUpdated.jsx';
 
 const DEFAULT_STAT = 'winrate';
@@ -11,11 +12,13 @@ const DEFAULT_STAT = 'winrate';
 export default function Dashboard() {
   const {
     stats,
+    players,
     loading,
     refreshing,
     error,
     handleRefresh,
     handleAddPlayer,
+    handleRemovePlayer
   } = usePlayerStats();
 
   const [selectedStat, setSelectedStat] = useState(DEFAULT_STAT);
@@ -50,6 +53,12 @@ export default function Dashboard() {
       <section className="dashboard__section">
         <h2 className="dashboard__section-title">Add Player</h2>
         <AddPlayer onAddPlayer={handleAddPlayer} />
+      </section>
+
+      {/* ── Remove Player ── */}
+      <section className="dashboard__section">
+        <h2 className="dashboard__section-title">Manage Players</h2>
+        <RemovePlayer stats={stats} players={players} onRemovePlayer={handleRemovePlayer} />
       </section>
 
       {/* ── Error Banner ── */}

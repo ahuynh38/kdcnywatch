@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { fetchAllStats, refreshStats, addPlayer, removePlayer } from '../api/client.js';
+import { fetchAllStats, fetchPlayers, refreshStats, addPlayer, removePlayer } from '../api/client.js';
 
 export function usePlayerStats() {
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
+  const [players, setPlayers] = useState([]);
 
   // ─── Load stats on mount ────────────────────────────────────────────────────
 
@@ -17,9 +18,14 @@ export function usePlayerStats() {
     try {
       setLoading(true);
       setError(null);
-      const data = await fetchAllStats();
+      const [data, playerList] = await Promise.all([
+        fetchAllStats(),
+        fetchPlayers(),
+      ]);
       setStats(data);
+      setPlayers(playerList);
     } catch (err) {
+      console.log(err)
       setError('Failed to load stats. Is the backend running?');
     } finally {
       setLoading(false);
@@ -62,9 +68,9 @@ export function usePlayerStats() {
     }
   }
 
-
   return {
     stats,
+    players,
     loading,
     refreshing,
     error,
