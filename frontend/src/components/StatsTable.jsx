@@ -1,0 +1,82 @@
+// ─── Stat definitions ─────────────────────────────────────────────────────────
+
+const STATS = [
+  { key: 'eliminations', label: 'Elims/10',    source: 'general', path: 'average', higherIsBetter: true  },
+  { key: 'assists',      label: 'Assists/10',  source: 'general', path: 'average', higherIsBetter: true  },
+  { key: 'deaths',       label: 'Deaths/10',   source: 'general', path: 'average', higherIsBetter: false },
+  { key: 'damage',       label: 'Damage/10',   source: 'general', path: 'average', higherIsBetter: true  },
+  { key: 'healing',      label: 'Healing/10',  source: 'general', path: 'average', higherIsBetter: true  },
+  { key: 'kda',          label: 'KDA',         source: 'general', path: null,    higherIsBetter: true  },
+  { key: 'winrate',      label: 'Winrate %',   source: 'general', path: null,    higherIsBetter: true  },
+];
+
+// ─── Helper: find the best value index in a row ───────────────────────────────
+
+function getBestIndex(values, higherIsBetter) {
+  if (values.every(v => v === null || v === undefined)) return -1;
+
+  return values.reduce((bestIdx, val, idx) => {
+    if (val === null || val === undefined) return bestIdx;
+    if (bestIdx === -1) return idx;
+    return higherIsBetter
+      ? val > values[bestIdx] ? idx : bestIdx
+      : val < values[bestIdx] ? idx : bestIdx;
+  }, -1);
+}
+
+// ─── Helper: format a stat value for display ──────────────────────────────────
+
+function formatValue(value, key) {
+  if (value === null || value === undefined) return '0';
+  if (key === 'winrate') return `${value.toFixed(1)}%`;
+  if (key === 'damage' || key === 'healing') return value.toLocaleString();
+  return value.toFixed(2);
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+export default function StatsTable({ stats }) {
+  const entries = Object.entries(stats);
+  const battletags = entries.map(([tag]) => tag);
+  const players = entries.map(([, player]) => player);
+
+  return (
+    <div className="stats-table-wrapper">
+      <table className="stats-table">
+        <thead>
+          <tr>
+            <th className="stats-table__stat-col">Stat</th>
+            {players.map((player, idx) => (
+              <th key={battletags[idx]} className="stats-table__player-col">
+                {player.username}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {STATS.map(({ key, label, source, path, higherIsBetter }) => {
+            const values = players.map(player => {
+                const base = player[source];
+                return (path ? base?.[path]?.[key] : base?.[key]) ?? 0;
+            });
+            const bestIdx = getBestIndex(values, higherIsBetter);
+
+            return (
+              <tr key={key} className="stats-table__row">
+                <td className="stats-table__label">{label}</td>
+                {values.map((value, idx) => (
+                  <td
+                    key={battletags[idx]}
+                    className={`stats-table__value${idx === bestIdx ? ' stats-table__value--best' : ''}`}
+                  >
+                    {formatValue(value, key)}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
