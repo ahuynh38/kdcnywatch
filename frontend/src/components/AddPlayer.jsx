@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import styles from './AddPlayer.module.css';
 
 export default function AddPlayer({ onAddPlayer }) {
   const [battletag, setBattletag] = useState('');
@@ -25,9 +26,9 @@ export default function AddPlayer({ onAddPlayer }) {
   }
 
   return (
-    <div className="add-player">
+    <div className={styles.addPlayer}>
       <input
-        className="add-player__input"
+        className={styles.input}
         type="text"
         placeholder="Battletag (e.g. Player-1234)"
         value={battletag}
@@ -35,14 +36,14 @@ export default function AddPlayer({ onAddPlayer }) {
         onKeyDown={handleKeyDown}
       />
       <button
-        className="add-player__button"
+        className={styles.button}
         onClick={handleSubmit}
         disabled={!battletag.trim() || status?.type === 'loading'}
       >
         {status?.type === 'loading' ? 'Adding...' : 'Add Player'}
       </button>
       {status && status.type !== 'loading' && (
-        <p className={`add-player__status add-player__status--${status.type}`}>
+        <p className={`${styles.status} ${status.type === 'success' ? styles.statusSuccess : styles.statusError}`}>
           {status.message}
         </p>
       )}

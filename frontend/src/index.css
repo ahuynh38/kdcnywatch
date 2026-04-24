@@ -1,0 +1,40 @@
+/* ─── Variables ────────────────────────────────────────────────────────────── */
+
+:root {
+  --bg:             #0f1117;
+  --surface:        #1a1d27;
+  --surface-raised: #22263a;
+  --surface-hover:  #2a2f45;
+  --border:         #2e3350;
+  --text:           #e8eaf0;
+  --text-muted:     #7a7f9a;
+  --orange:         #F99E1A;
+  --orange-dim:     rgba(249, 158, 26, 0.15);
+  --green:          #4caf7d;
+  --red:            #e05c5c;
+  --yellow:         #f0c040;
+  --radius:         8px;
+  --radius-sm:      4px;
+  --shadow:         0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-card:    0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* ─── Reset & Base ─────────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}

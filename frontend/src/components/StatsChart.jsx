@@ -1,4 +1,5 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
+import styles from './StatsChart.module.css';
 
 const BAR_DEFAULT = '#4A90D9';
 
@@ -73,8 +74,8 @@ export default function StatsChart({ stats, selectedStat }) {
   });
 
   return (
-    <div className="stat-chart">
-      <h3 className="stat-chart__title">{label} — Player Comparison</h3>
+    <div className={styles.chart}>
+      <h3 className={styles.title}>{label} — Player Comparison</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data} margin={{ top: 10, right: 30, left: 20, bottom: 25 }}>
           <XAxis

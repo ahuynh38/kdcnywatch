@@ -1,3 +1,5 @@
+import styles from './StatsTable.module.css';
+
 // ─── Stat definitions ─────────────────────────────────────────────────────────
 
 const STATS = [
@@ -41,13 +43,13 @@ export default function StatsTable({ stats, selectedStat, onStatSelect }) {
   const players = entries.map(([, player]) => player);
 
   return (
-    <div className="stats-table-wrapper">
-      <table className="stats-table">
+    <div className={styles.wrapper}>
+      <table className={styles.table}>
         <thead>
           <tr>
-            <th className="stats-table__stat-col">Stat</th>
+            <th>Stat</th>
             {players.map((player, idx) => (
-              <th key={battletags[idx]} className="stats-table__player-col">
+              <th key={battletags[idx]} className={styles.playerCol}>
                 {player.username}
               </th>
             ))}
@@ -64,14 +66,14 @@ export default function StatsTable({ stats, selectedStat, onStatSelect }) {
             return (
               <tr
                 key={key}
-                className={`stats-table__row${key === selectedStat ? ' stats-table__row--selected' : ''}`}
+                className={`${styles.row}${key === selectedStat ? ` ${styles.rowSelected}` : '' }`}
                 onClick={() => onStatSelect(key)}
               >
-                <td className="stats-table__label">{label}</td>
+                <td className={styles.label}>{label}</td>
                 {values.map((value, idx) => (
                   <td
                     key={battletags[idx]}
-                    className={`stats-table__value${idx === bestIdx ? ' stats-table__value--best' : ''}`}
+                    className={`${styles.value}${idx === bestIdx ? ` ${styles.valueBest}` : '' }`}
                   >
                     {formatValue(value, key)}
                   </td>

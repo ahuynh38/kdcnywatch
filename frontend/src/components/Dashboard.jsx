@@ -6,6 +6,7 @@ import StatsChart from '../components/StatsChart.jsx';
 import AddPlayer from '../components/AddPlayer.jsx';
 import RemovePlayer from './RemovePlayer.jsx';
 import LastUpdated from '../components/LastUpdated.jsx';
+import styles from './Dashboard.module.css';
 
 const DEFAULT_STAT = 'winrate';
 
@@ -30,18 +31,18 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="dashboard__loading">
+      <div className={styles.loading}>
         <p>Loading stats...</p>
       </div>
     );
   }
 
   return (
-    <div className="dashboard">
+    <div className={styles.dashboard}>
 
       {/* ── Header ── */}
-      <header className="dashboard__header">
-        <h1 className="dashboard__title">kdcnywatch</h1>
+      <header className={styles.header}>
+        <h1 className={styles.title}>kdcnywatch</h1>
         <LastUpdated
           stats={stats}
           refreshing={refreshing}
@@ -50,32 +51,32 @@ export default function Dashboard() {
       </header>
 
       {/* ── Add Player ── */}
-      <section className="dashboard__section">
-        <h2 className="dashboard__section-title">Add Player</h2>
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Add Player</h2>
         <AddPlayer onAddPlayer={handleAddPlayer} />
       </section>
 
       {/* ── Remove Player ── */}
-      <section className="dashboard__section">
-        <h2 className="dashboard__section-title">Manage Players</h2>
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Manage Players</h2>
         <RemovePlayer stats={stats} players={players} onRemovePlayer={handleRemovePlayer} />
       </section>
 
       {/* ── Error Banner ── */}
       {error && (
-        <div className="dashboard__error">
+        <div className={styles.error}>
           {error}
         </div>
       )}
 
       {/* ── Player Cards ── */}
-      <section className="dashboard__section">
+      <section className={styles.section}>
         <PlayerGrid stats={stats} />
       </section>
 
       {/* ── Stat Comparison Table ── */}
-      <section className="dashboard__section">
-        <h2 className="dashboard__section-title">Stat Comparison Table</h2>
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Stat Comparison Table</h2>
         <StatsTable
           stats={stats}
           selectedStat={selectedStat}
@@ -84,7 +85,7 @@ export default function Dashboard() {
       </section>
 
       {/* ── Stat Chart ── */}
-      <section className="dashboard__section">
+      <section className={styles.section}>
         <StatsChart
           stats={stats}
           selectedStat={selectedStat}

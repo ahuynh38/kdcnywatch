@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import styles from './RemovePlayer.module.css';
 
 export default function RemovePlayer({ stats, players, onRemovePlayer }) {
   const [confirming, setConfirming] = useState(null);
@@ -20,34 +21,34 @@ export default function RemovePlayer({ stats, players, onRemovePlayer }) {
   }
 
   if (battletags.length === 0) {
-    return <p className="remove-player__empty">No players are being tracked.</p>;
+    return <p className={styles.empty}>No players are being tracked.</p>;
   }
 
   return (
     <div className="remove-player">
-      <ul className="remove-player__list">
+      <ul className={styles.list}>
         {players.map((battletag) => {
             const hasFailed = !stats[battletag];
             return (
-                <li key={battletag} className={`remove-player__item${hasFailed ? ' remove-player__item--failed' : ''}`}>
-                    <div className="remove-player__info">
-                        <span className="remove-player__tag">{battletag}</span>
+                <li key={battletag} className={`${styles.item}${hasFailed ? `${styles.itemFailed}` : ''}`}>
+                    <div className={styles.info}>
+                        <span className={styles.tag}>{battletag}</span>
                         {hasFailed && (
-                            <span className="remove-player__failed-badge"> (FETCH FAILED) </span>
+                            <span className={styles.failedBadge}>fetch failed</span>
                         )}
                     </div>
-                    <div className="remove-player__actions">
+                    <div className={styles.actions}>
               {confirming === battletag ? (
                 <>
-                  <span className="remove-player__confirm-text">Are you sure?</span>
+                  <span className={styles.confirmText}>Are you sure?</span>
                   <button
-                    className="remove-player__button remove-player__button--confirm"
+                    className={`${styles.button} ${styles.buttonConfirm}`}
                     onClick={() => handleRemove(battletag)}
                   >
                     Yes, remove
                   </button>
                   <button
-                    className="remove-player__button remove-player__button--cancel"
+                    className={`${styles.button} ${styles.buttonCancel}`}
                     onClick={handleCancel}
                   >
                     Cancel
@@ -55,7 +56,7 @@ export default function RemovePlayer({ stats, players, onRemovePlayer }) {
                 </>
               ) : (
                 <button
-                  className="remove-player__button remove-player__button--remove"
+                  className={`${styles.button} ${styles.buttonRemove}`}
                   onClick={() => handleRemove(battletag)}
                 >
                   Remove

@@ -1,3 +1,5 @@
+import styles from './LastUpdated.module.css'
+
 export default function LastUpdated({ stats, refreshing, onRefresh }) {
   const players = Object.values(stats);
   const fetchedAt = players[0]?.fetchedAt;
@@ -8,12 +10,12 @@ export default function LastUpdated({ stats, refreshing, onRefresh }) {
   }
 
   return (
-    <div className="last-updated">
-      <span className="last-updated__text">
+    <div className={styles.lastUpdated}>
+      <span className={styles.text}>
         Last updated: {formatDate(fetchedAt)}
       </span>
       <button
-        className="last-updated__button"
+        className={styles.button}
         onClick={onRefresh}
         disabled={refreshing}
       >
