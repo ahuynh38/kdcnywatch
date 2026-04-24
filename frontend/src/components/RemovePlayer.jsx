@@ -25,7 +25,7 @@ export default function RemovePlayer({ stats, players, onRemovePlayer }) {
   }
 
   return (
-    <div className="remove-player">
+    <div className={styles.removePlayer}>
       <ul className={styles.list}>
         {players.map((battletag) => {
             const hasFailed = !stats[battletag];

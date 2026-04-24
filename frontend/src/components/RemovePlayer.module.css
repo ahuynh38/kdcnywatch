@@ -1,3 +1,7 @@
+.removePlayer {
+  max-width: auto;
+}
+
 .list {
   list-style: none;
   display: flex;

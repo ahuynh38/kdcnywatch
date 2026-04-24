@@ -50,25 +50,6 @@ export default function Dashboard() {
         />
       </header>
 
-      {/* ── Add Player ── */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Add Player</h2>
-        <AddPlayer onAddPlayer={handleAddPlayer} />
-      </section>
-
-      {/* ── Remove Player ── */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Manage Players</h2>
-        <RemovePlayer stats={stats} players={players} onRemovePlayer={handleRemovePlayer} />
-      </section>
-
-      {/* ── Error Banner ── */}
-      {error && (
-        <div className={styles.error}>
-          {error}
-        </div>
-      )}
-
       {/* ── Player Cards ── */}
       <section className={styles.section}>
         <PlayerGrid stats={stats} />
@@ -91,6 +72,28 @@ export default function Dashboard() {
           selectedStat={selectedStat}
         />
       </section>
+
+      {/* ── Add and Remove Players ── */}
+      <section className={styles.section}>
+        <div className={styles.playersGrid}>
+          <div>
+            <h2 className={styles.sectionTitle}>Player List</h2>
+            <RemovePlayer stats={stats} players={players} onRemovePlayer={handleRemovePlayer} />
+          </div>
+          <div>
+            <h2 className={styles.sectionTitle}>Add Player</h2>
+            <AddPlayer onAddPlayer={handleAddPlayer} />
+          </div>
+        </div>
+      </section>
+
+
+      {/* ── Error Banner ── */}
+      {error && (
+        <div className={styles.error}>
+          {error}
+        </div>
+      )}
 
     </div>
   );
