@@ -14,6 +14,7 @@ const STATS_FILE = path.join(DATA_DIR, 'stats.json');
 
 function readJSON(filePath) {
   const raw = fs.readFileSync(filePath, 'utf-8');
+  if (!raw.trim()) return {};
   return JSON.parse(raw);
 }
 
