@@ -38,6 +38,17 @@ export function addPlayer(battletag) {
   writeJSON(PLAYERS_FILE, players);
 }
 
+export function removePlayer(battletag) {
+  const players = getPlayers();
+  const updated = players.filter(p => p !== battletag);
+
+  if (updated.length === players.length) {
+    throw new Error(`Player ${battletag} not found.`);
+  }
+
+  writeJSON(PLAYERS_FILE, updated);
+}
+
 // ─── Stats ──────────────────────────────────────────────────────────────────
 
 export function getStats() {

@@ -32,3 +32,8 @@ export async function addPlayer(battletag) {
   const response = await client.post('/players/add', { battletag });
   return response.data;
 }
+
+export async function removePlayer(battletag) {
+  const response = await client.delete(`/players/${battletag}`);
+  return response.data;
+}

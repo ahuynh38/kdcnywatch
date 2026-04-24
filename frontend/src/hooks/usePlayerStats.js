@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchAllStats, refreshStats, addPlayer } from '../api/client.js';
+import { fetchAllStats, refreshStats, addPlayer, removePlayer } from '../api/client.js';
 
 export function usePlayerStats() {
   const [stats, setStats] = useState({});
@@ -52,6 +52,17 @@ export function usePlayerStats() {
     }
   }
 
+  // ─── Remove an existing player ───────────────────────────────────────────────────────
+  async function handleRemovePlayer(battletag) {
+    try {
+      await removePlayer(battletag);
+      await handleRefresh();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to remove player.');
+    }
+  }
+
+
   return {
     stats,
     loading,
@@ -59,5 +70,6 @@ export function usePlayerStats() {
     error,
     handleRefresh,
     handleAddPlayer,
+    handleRemovePlayer,
   };
 }

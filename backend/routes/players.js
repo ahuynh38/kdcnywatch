@@ -1,5 +1,5 @@
 import express from 'express';
-import { getPlayers, getStatsByPlayer, getStats, addPlayer } from '../storage.js';
+import { getPlayers, getStatsByPlayer, getStats, addPlayer, removePlayer } from '../storage.js';
 import { fetchAllPlayers } from '../fetcher.js';
 
 const router = express.Router();
@@ -53,6 +53,16 @@ router.post('/add', (req, res) => {
 
     addPlayer(battletag);
     res.json({ message: `${battletag} added successfully.` });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// DELETE /players/:tag
+router.delete('/:tag', (req, res) => {
+  try {
+    removePlayer(req.params.tag);
+    res.json({ message: `${req.params.tag} removed successfully.` });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
