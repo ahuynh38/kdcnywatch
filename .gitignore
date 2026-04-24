@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Stats cache (regenerated on refresh, no need to track)
+backend/data/stats.json
+
+# OS clutter
+.DS_Store
