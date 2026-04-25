@@ -6,13 +6,14 @@ const BAR_DEFAULT = '#4A90D9';
 // ─── Stat metadata (mirrored from StatsTable) ─────────────────────────────────
 
 const STAT_META = {
-  eliminations: { label: 'Elims/10',   source: 'general', path: 'average' },
-  assists:      { label: 'Assists/10', source: 'general', path: 'average' },
-  deaths:       { label: 'Deaths/10',  source: 'general', path: 'average' },
-  damage:       { label: 'Damage/10',  source: 'general', path: 'average' },
-  healing:      { label: 'Healing/10', source: 'general', path: 'average' },
-  kda:          { label: 'KDA',        source: 'general', path: null      },
-  winrate:      { label: 'Winrate %',  source: 'general', path: null      },
+  eliminations: { label: 'Elims/10',     source: 'general', path: 'average' },
+  assists:      { label: 'Assists/10',   source: 'general', path: 'average' },
+  deaths:       { label: 'Deaths/10',    source: 'general', path: 'average' },
+  damage:       { label: 'Damage/10',    source: 'general', path: 'average' },
+  healing:      { label: 'Healing/10',   source: 'general', path: 'average' },
+  kda:          { label: 'KDA',          source: 'general', path: null      },
+  winrate:      { label: 'Winrate %',    source: 'general', path: null      },
+  games_played: { label: 'Games Played', source: 'general', path: null      },
 };
 
 // ─── Helper: format tooltip values ───────────────────────────────────────────
@@ -20,6 +21,7 @@ const STAT_META = {
 function formatValue(value, key) {
   if (key === 'winrate') return `${value.toFixed(1)}%`;
   if (key === 'damage' || key === 'healing') return value.toLocaleString();
+  if (key === 'games_played') return value.toLocaleString();
   return value.toFixed(2);
 }
 

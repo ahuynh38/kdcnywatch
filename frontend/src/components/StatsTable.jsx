@@ -3,13 +3,14 @@ import styles from './StatsTable.module.css';
 // ─── Stat definitions ─────────────────────────────────────────────────────────
 
 const STATS = [
-  { key: 'eliminations', label: 'Elims/10',    source: 'general', path: 'average', higherIsBetter: true  },
-  { key: 'assists',      label: 'Assists/10',  source: 'general', path: 'average', higherIsBetter: true  },
-  { key: 'deaths',       label: 'Deaths/10',   source: 'general', path: 'average', higherIsBetter: false },
-  { key: 'damage',       label: 'Damage/10',   source: 'general', path: 'average', higherIsBetter: true  },
-  { key: 'healing',      label: 'Healing/10',  source: 'general', path: 'average', higherIsBetter: true  },
-  { key: 'kda',          label: 'KDA',         source: 'general', path: null,    higherIsBetter: true  },
-  { key: 'winrate',      label: 'Winrate %',   source: 'general', path: null,    higherIsBetter: true  },
+  { key: 'eliminations', label: 'Elims/10',     source: 'general', path: 'average', higherIsBetter: true  },
+  { key: 'assists',      label: 'Assists/10',   source: 'general', path: 'average', higherIsBetter: true  },
+  { key: 'deaths',       label: 'Deaths/10',    source: 'general', path: 'average', higherIsBetter: false },
+  { key: 'damage',       label: 'Damage/10',    source: 'general', path: 'average', higherIsBetter: true  },
+  { key: 'healing',      label: 'Healing/10',   source: 'general', path: 'average', higherIsBetter: true  },
+  { key: 'kda',          label: 'KDA',          source: 'general', path: null,      higherIsBetter: true  },
+  { key: 'winrate',      label: 'Winrate %',    source: 'general', path: null,      higherIsBetter: true  },
+  { key: 'games_played', label: 'Games Played', source: 'general', path: null,      higherIsBetter: true  },
 ];
 
 // ─── Helper: find the best value index in a row ───────────────────────────────
@@ -32,6 +33,7 @@ function formatValue(value, key) {
   if (value === null || value === undefined) return '0';
   if (key === 'winrate') return `${value.toFixed(1)}%`;
   if (key === 'damage' || key === 'healing') return value.toLocaleString();
+  if (key === 'games_played') return value.toLocaleString();
   return value.toFixed(2);
 }
 
