@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import playerRoutes from './routes/players.js';
 import rateLimit from 'express-rate-limit';
+import { fetchAllPlayers } from './fetcher.js';
+import { getStats } from './storage.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
