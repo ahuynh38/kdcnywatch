@@ -6,7 +6,8 @@ import StatsChart from '../components/StatsChart.jsx';
 import AddPlayer from '../components/AddPlayer.jsx';
 import RemovePlayer from './RemovePlayer.jsx';
 import LastUpdated from '../components/LastUpdated.jsx';
-import RoleToggle from '../components/RoleToggle.jsx'
+import RoleToggle from '../components/RoleToggle.jsx';
+import ViewToggle from '../components/ViewToggle.jsx';
 import styles from './Dashboard.module.css';
 
 const DEFAULT_STAT = 'winrate';
@@ -25,6 +26,7 @@ export default function Dashboard() {
 
   const [selectedStat, setSelectedStat] = useState(DEFAULT_STAT);
   const [selectedRole, setSelectedRole] = useState('all');
+  const [selectedView, setSelectedView] = useState('average');
 
   function handleStatSelect(statKey) {
     if (statKey === selectedStat) return;
@@ -34,6 +36,11 @@ export default function Dashboard() {
   function handleRoleSelect(role) {
     if (role === selectedRole) return;
     setSelectedRole(role);
+  }
+
+  function handleViewSelect(view) {
+    if (view === selectedView) return;
+    setSelectedView(view);
   }
 
   if (loading) {
@@ -62,23 +69,29 @@ export default function Dashboard() {
         <PlayerGrid stats={stats} />
       </section>
 
-      {/* ── Role Selector ── */}
+      {/* ── Role and View Selector ── */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Stats by role</h2>
-        <RoleToggle
-          selectedRole={selectedRole}
-          onRoleSelect={handleRoleSelect}
-        />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', justifyContent: 'center' }}>
+          <h2 className={styles.sectionTitle}>Stats by role</h2>
+          <RoleToggle
+            selectedRole={selectedRole}
+            onRoleSelect={handleRoleSelect}
+          />
+          <ViewToggle
+            selectedView={selectedView}
+            onViewSelect={handleViewSelect}
+          />
+        </div>
       </section>
 
       {/* ── Stat Comparison Table ── */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Stat Comparison Table</h2>
         <StatsTable
           stats={stats}
           selectedStat={selectedStat}
           onStatSelect={handleStatSelect}
           selectedRole={selectedRole}
+          selectedView={selectedView}
         />
       </section>
 
@@ -88,6 +101,7 @@ export default function Dashboard() {
           stats={stats}
           selectedStat={selectedStat}
           selectedRole={selectedRole}
+          selectedView={selectedView}
         />
       </section>
 

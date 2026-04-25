@@ -7,23 +7,23 @@ const BAR_DEFAULT = '#4A90D9';
 // ─── Stat metadata (mirrored from StatsTable) ─────────────────────────────────
 
 const STAT_META = {
-  eliminations: { label: 'Elims/10',     source: 'general', path: 'average' },
-  assists:      { label: 'Assists/10',   source: 'general', path: 'average' },
-  deaths:       { label: 'Deaths/10',    source: 'general', path: 'average' },
-  damage:       { label: 'Damage/10',    source: 'general', path: 'average' },
-  healing:      { label: 'Healing/10',   source: 'general', path: 'average' },
-  kda:          { label: 'KDA',          source: 'general', path: null      },
-  winrate:      { label: 'Winrate %',    source: 'general', path: null      },
-  games_played: { label: 'Games Played', source: 'general', path: null      },
+  eliminations: { averageLabel: 'Elims/10',     totalLabel: 'Elims',     hasTotal: true,  source: 'general' },
+  assists:      { averageLabel: 'Assists/10',   totalLabel: 'Assists',   hasTotal: true,  source: 'general' },
+  deaths:       { averageLabel: 'Deaths/10',    totalLabel: 'Deaths',    hasTotal: true,  source: 'general' },
+  damage:       { averageLabel: 'Damage/10',    totalLabel: 'Damage',    hasTotal: true,  source: 'general' },
+  healing:      { averageLabel: 'Healing/10',   totalLabel: 'Healing',   hasTotal: true,  source: 'general' },
+  kda:          { averageLabel: 'KDA',          totalLabel: 'KDA',       hasTotal: false, source: 'general' },
+  winrate:      { averageLabel: 'Winrate %',    totalLabel: 'Winrate %', hasTotal: false, source: 'general' },
+  games_played: { averageLabel: 'Games Played', totalLabel: 'Games Played', hasTotal: false, source: 'general' },
 };
 
 // ─── Helper: format tooltip values ───────────────────────────────────────────
 
 function formatValue(value, key) {
   if (key === 'winrate') return `${value.toFixed(1)}%`;
-  if (key === 'damage' || key === 'healing') return value.toLocaleString();
-  if (key === 'games_played') return value.toLocaleString();
-  return value.toFixed(2);
+  if (key === 'damage' || key === 'healing' || key === 'games_played') return value.toLocaleString();
+  if (key === 'kda') return value.toFixed(2);
+  return value.toLocaleString();
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -80,8 +80,10 @@ function CustomXTick({ x, y, payload, stats, compact }) {
     );
 }
 
-export default function StatsChart({ stats, selectedStat, selectedRole }) {
-  const { source, path, label } = STAT_META[selectedStat];
+export default function StatsChart({ stats, selectedStat, selectedRole, selectedView }) {
+  const { averageLabel, totalLabel, hasTotal } = STAT_META[selectedStat];
+  const path = hasTotal ? selectedView : null;
+  const label = selectedView === 'average' ? averageLabel : totalLabel;
 
   // To help with handling mobile screens
   const windowWidth = useWindowWidth();

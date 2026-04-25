@@ -3,14 +3,14 @@ import styles from './StatsTable.module.css';
 // ─── Stat definitions ─────────────────────────────────────────────────────────
 
 const STATS = [
-  { key: 'eliminations', label: 'Elims/10',     source: 'general', path: 'average', higherIsBetter: true  },
-  { key: 'assists',      label: 'Assists/10',   source: 'general', path: 'average', higherIsBetter: true  },
-  { key: 'deaths',       label: 'Deaths/10',    source: 'general', path: 'average', higherIsBetter: false },
-  { key: 'damage',       label: 'Damage/10',    source: 'general', path: 'average', higherIsBetter: true  },
-  { key: 'healing',      label: 'Healing/10',   source: 'general', path: 'average', higherIsBetter: true  },
-  { key: 'kda',          label: 'KDA',          source: 'general', path: null,      higherIsBetter: true  },
-  { key: 'winrate',      label: 'Winrate %',    source: 'general', path: null,      higherIsBetter: true  },
-  { key: 'games_played', label: 'Games Played', source: 'general', path: null,      higherIsBetter: true  },
+  { key: 'eliminations', averageLabel: 'Elims/10',    totalLabel: 'Elims',    hasTotal: true,  higherIsBetter: true  },
+  { key: 'assists',      averageLabel: 'Assists/10',  totalLabel: 'Assists',  hasTotal: true,  higherIsBetter: true  },
+  { key: 'deaths',       averageLabel: 'Deaths/10',   totalLabel: 'Deaths',   hasTotal: true,  higherIsBetter: false },
+  { key: 'damage',       averageLabel: 'Damage/10',   totalLabel: 'Damage',   hasTotal: true,  higherIsBetter: true  },
+  { key: 'healing',      averageLabel: 'Healing/10',  totalLabel: 'Healing',  hasTotal: true,  higherIsBetter: true  },
+  { key: 'kda',          averageLabel: 'KDA',         totalLabel: 'KDA',      hasTotal: false, higherIsBetter: true  },
+  { key: 'winrate',      averageLabel: 'Winrate %',   totalLabel: 'Winrate %',hasTotal: false, higherIsBetter: true  },
+  { key: 'games_played', averageLabel: 'Games Played',totalLabel: 'Games Played', hasTotal: false, higherIsBetter: true },
 ];
 
 // ─── Helper: find the best value index in a row ───────────────────────────────
@@ -32,14 +32,14 @@ function getBestIndex(values, higherIsBetter) {
 function formatValue(value, key) {
   if (value === null || value === undefined) return '0';
   if (key === 'winrate') return `${value.toFixed(1)}%`;
-  if (key === 'damage' || key === 'healing') return value.toLocaleString();
-  if (key === 'games_played') return value.toLocaleString();
-  return value.toFixed(2);
+  if (key === 'damage' || key === 'healing' || key === 'games_played') return value.toLocaleString();
+  if (key === 'kda') return value.toFixed(2);
+  return value.toLocaleString();
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function StatsTable({ stats, selectedStat, onStatSelect, selectedRole }) {
+export default function StatsTable({ stats, selectedStat, onStatSelect, selectedRole, selectedView }) {
   const entries = Object.entries(stats);
   const battletags = entries.map(([tag]) => tag);
   const players = entries.map(([, player]) => player);
@@ -62,7 +62,9 @@ export default function StatsTable({ stats, selectedStat, onStatSelect, selected
           </tr>
         </thead>
         <tbody>
-          {STATS.map(({ key, label, source, path, higherIsBetter }) => {
+          {STATS.map(({ key, averageLabel, totalLabel, hasTotal, higherIsBetter }) => {
+            const path = hasTotal ? selectedView : null;
+            const label = selectedView === 'average' ? averageLabel : totalLabel;
             const values = players.map(player => {
                 const base = getSource(player);
                 return (path ? base?.[path]?.[key] : base?.[key]) ?? 0;

@@ -1,6 +1,7 @@
 .toggle {
   display: flex;
   gap: 4px;
+  margin: auto;
 }
 
 .button {
