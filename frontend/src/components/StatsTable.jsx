@@ -37,10 +37,14 @@ function formatValue(value, key) {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function StatsTable({ stats, selectedStat, onStatSelect }) {
+export default function StatsTable({ stats, selectedStat, onStatSelect, selectedRole }) {
   const entries = Object.entries(stats);
   const battletags = entries.map(([tag]) => tag);
   const players = entries.map(([, player]) => player);
+
+  function getSource(player) {
+    return selectedRole === 'all' ? player.general : player.roles?.[selectedRole];
+  }
 
   return (
     <div className={styles.wrapper}>
@@ -58,7 +62,7 @@ export default function StatsTable({ stats, selectedStat, onStatSelect }) {
         <tbody>
           {STATS.map(({ key, label, source, path, higherIsBetter }) => {
             const values = players.map(player => {
-                const base = player[source];
+                const base = getSource(player);
                 return (path ? base?.[path]?.[key] : base?.[key]) ?? 0;
             });
             const bestIdx = getBestIndex(values, higherIsBetter);

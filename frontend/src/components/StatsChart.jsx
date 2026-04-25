@@ -60,11 +60,11 @@ function CustomXTick({ x, y, payload, stats }) {
     );
 }
 
-export default function StatsChart({ stats, selectedStat }) {
+export default function StatsChart({ stats, selectedStat, selectedRole }) {
   const { source, path, label } = STAT_META[selectedStat];
 
   const data = Object.entries(stats).map(([battletag, player]) => {
-    const base = player[source];
+    const base = getSource(player);
     const value = (path ? base?.[path]?.[selectedStat] : base?.[selectedStat]) ?? 0;
 
     return {
@@ -72,6 +72,10 @@ export default function StatsChart({ stats, selectedStat }) {
       value,
     };
   });
+
+  function getSource(player) {
+    return selectedRole === 'all' ? player.general : player.roles?.[selectedRole];
+  }
 
   return (
     <div className={styles.chart}>

@@ -6,6 +6,7 @@ import StatsChart from '../components/StatsChart.jsx';
 import AddPlayer from '../components/AddPlayer.jsx';
 import RemovePlayer from './RemovePlayer.jsx';
 import LastUpdated from '../components/LastUpdated.jsx';
+import RoleToggle from '../components/RoleToggle.jsx'
 import styles from './Dashboard.module.css';
 
 const DEFAULT_STAT = 'winrate';
@@ -23,10 +24,16 @@ export default function Dashboard() {
   } = usePlayerStats();
 
   const [selectedStat, setSelectedStat] = useState(DEFAULT_STAT);
+  const [selectedRole, setSelectedRole] = useState('all');
 
   function handleStatSelect(statKey) {
     if (statKey === selectedStat) return;
     setSelectedStat(statKey);
+  }
+
+  function handleRoleSelect(role) {
+    if (role === selectedRole) return;
+    setSelectedRole(role);
   }
 
   if (loading) {
@@ -55,6 +62,15 @@ export default function Dashboard() {
         <PlayerGrid stats={stats} />
       </section>
 
+      {/* ── Role Selector ── */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Stats by role</h2>
+        <RoleToggle
+          selectedRole={selectedRole}
+          onRoleSelect={handleRoleSelect}
+        />
+      </section>
+
       {/* ── Stat Comparison Table ── */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Stat Comparison Table</h2>
@@ -62,6 +78,7 @@ export default function Dashboard() {
           stats={stats}
           selectedStat={selectedStat}
           onStatSelect={handleStatSelect}
+          selectedRole={selectedRole}
         />
       </section>
 
@@ -70,6 +87,7 @@ export default function Dashboard() {
         <StatsChart
           stats={stats}
           selectedStat={selectedStat}
+          selectedRole={selectedRole}
         />
       </section>
 
