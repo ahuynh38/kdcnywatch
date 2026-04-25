@@ -36,4 +36,11 @@ app.get('/health', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+
+  const stats = getStats();
+  if (Object.keys(stats).length === 0) {
+    console.log('stats.json is empty, fetching player stats on startup...');
+    await fetchAllPlayers();
+    console.log('Startup fetch copmlete.');
+  }
 });
