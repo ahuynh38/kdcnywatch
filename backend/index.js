@@ -36,7 +36,7 @@ app.get('/health', (req, res) => {
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
 
   const stats = getStats();
