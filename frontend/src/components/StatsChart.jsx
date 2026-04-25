@@ -1,4 +1,5 @@
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
+import { useState, useEffect } from 'react';
 import styles from './StatsChart.module.css';
 
 const BAR_DEFAULT = '#4A90D9';
@@ -27,13 +28,28 @@ function formatValue(value, key) {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-function CustomXTick({ x, y, payload, stats }) {
+// Optimize width for mobile vs. desktop screens
+function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    function handleResize() {
+      setWidth(window.innerWidth);
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return width;
+}
+
+function CustomXTick({ x, y, payload, stats, compact }) {
     const player = Object.values(stats).find(p => p.username === payload.value);
     if (!player) return null;
 
     const size = 36;
     const estimatedTextWidth = payload.value.length * 7.5;
-    const totalWidth = size + 6 + estimatedTextWidth;
+    const totalWidth = compact ? size : size + 6 + estimatedTextWidth;
 
     return (
         <g transform={`translate(${x - totalWidth / 2 + size / 2},${y})`}>
@@ -49,21 +65,31 @@ function CustomXTick({ x, y, payload, stats }) {
             clipPath={`url(#clip-${payload.value})`}
             preserveAspectRatio="xMidYMid slice"
           />
-          <text
-            x={size / 2 + 6}
-            y={size / 2 + 14}
-            textAnchor="start"
-            fontSize={13}
-            fill="#e8eaf0"
-          >
-            {payload.value}
-          </text>
+          {!compact && (
+            <text
+              x={size / 2 + 6}
+              y={size / 2 + 14}
+              textAnchor="start"
+              fontSize={13}
+              fill="#e8eaf0"
+            >
+              {payload.value}
+            </text>
+          )}
         </g>
     );
 }
 
 export default function StatsChart({ stats, selectedStat, selectedRole }) {
   const { source, path, label } = STAT_META[selectedStat];
+
+  // To help with handling mobile screens
+  const windowWidth = useWindowWidth();
+  const isCompact = windowWidth < 640;
+
+  function getSource(player) {
+    return selectedRole === 'all' ? player.general : player.roles?.[selectedRole];
+  }
 
   const data = Object.entries(stats).map(([battletag, player]) => {
     const base = getSource(player);
@@ -75,21 +101,17 @@ export default function StatsChart({ stats, selectedStat, selectedRole }) {
     };
   });
 
-  function getSource(player) {
-    return selectedRole === 'all' ? player.general : player.roles?.[selectedRole];
-  }
-
   return (
     <div className={styles.chart}>
       <h3 className={styles.title}>{label} — Player Comparison</h3>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} margin={{ top: 10, right: 30, left: 20, bottom: 25 }}>
+        <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 25 }}>
           <XAxis
             dataKey="name"
-            tick={<CustomXTick stats={stats} />}
+            tick={<CustomXTick stats={stats} compact={isCompact} />}
             interval={0}
           />
-          <YAxis />
+          <YAxis hide={isCompact} />
           <Tooltip
             formatter={(value) => formatValue(value, selectedStat)}
             cursor={{ fill: 'rgba(255,255,255,0.05)' }}
