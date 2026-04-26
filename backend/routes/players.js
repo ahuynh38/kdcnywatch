@@ -59,7 +59,8 @@ router.post('/add', (req, res) => {
   }
 });
 
-// DELETE /players/:tag
+// ─── DELETE /players/:tag ────────────────────────────────────────────────────
+// Deletes a player from the tracking list
 router.delete('/:tag', (req, res) => {
   try {
     removePlayer(req.params.tag);
