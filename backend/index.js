@@ -39,10 +39,7 @@ app.get('/health', (req, res) => {
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
 
+  // Fetch all players from the get-go to force refresh on backend startup
+  await fetchAllPlayers();
   const stats = getStats();
-  if (Object.keys(stats).length === 0) {
-    console.log('stats.json is empty, fetching player stats on startup...');
-    await fetchAllPlayers();
-    console.log('Startup fetch copmlete.');
-  }
 });
