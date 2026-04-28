@@ -7,14 +7,15 @@ const BAR_DEFAULT = '#4A90D9';
 // ─── Stat metadata (mirrored from StatsTable) ─────────────────────────────────
 
 const STAT_META = {
-  eliminations: { averageLabel: 'Elims/10',     totalLabel: 'Elims',     hasTotal: true,  source: 'general' },
-  assists:      { averageLabel: 'Assists/10',   totalLabel: 'Assists',   hasTotal: true,  source: 'general' },
-  deaths:       { averageLabel: 'Deaths/10',    totalLabel: 'Deaths',    hasTotal: true,  source: 'general' },
-  damage:       { averageLabel: 'Damage/10',    totalLabel: 'Damage',    hasTotal: true,  source: 'general' },
-  healing:      { averageLabel: 'Healing/10',   totalLabel: 'Healing',   hasTotal: true,  source: 'general' },
-  kda:          { averageLabel: 'KDA',          totalLabel: 'KDA',       hasTotal: false, source: 'general' },
-  winrate:      { averageLabel: 'Winrate %',    totalLabel: 'Winrate %', hasTotal: false, source: 'general' },
+  eliminations: { averageLabel: 'Elims/10',     totalLabel: 'Elims',        hasTotal: true,  source: 'general' },
+  assists:      { averageLabel: 'Assists/10',   totalLabel: 'Assists',      hasTotal: true,  source: 'general' },
+  deaths:       { averageLabel: 'Deaths/10',    totalLabel: 'Deaths',       hasTotal: true,  source: 'general' },
+  damage:       { averageLabel: 'Damage/10',    totalLabel: 'Damage',       hasTotal: true,  source: 'general' },
+  healing:      { averageLabel: 'Healing/10',   totalLabel: 'Healing',      hasTotal: true,  source: 'general' },
+  kda:          { averageLabel: 'KDA',          totalLabel: 'KDA',          hasTotal: false, source: 'general' },
+  winrate:      { averageLabel: 'Winrate %',    totalLabel: 'Winrate %',    hasTotal: false, source: 'general' },
   games_played: { averageLabel: 'Games Played', totalLabel: 'Games Played', hasTotal: false, source: 'general' },
+  time_played:  { averageLabel: 'Time Played',  totalLabel: 'Time Played',  hasTotal: false, source: 'general' },
 };
 
 // ─── Helper: format tooltip values ───────────────────────────────────────────
@@ -23,6 +24,7 @@ function formatValue(value, key) {
   if (key === 'winrate') return `${value.toFixed(1)}%`;
   if (key === 'damage' || key === 'healing' || key === 'games_played') return value.toLocaleString();
   if (key === 'kda') return value.toFixed(2);
+  if (key === 'time_played') return `${(value / 3600).toFixed(2)} hrs`;
   return value.toLocaleString();
 }
 

@@ -3,14 +3,15 @@ import styles from './StatsTable.module.css';
 // ─── Stat definitions ─────────────────────────────────────────────────────────
 
 const STATS = [
-  { key: 'eliminations', averageLabel: 'Elims/10',    totalLabel: 'Elims',    hasTotal: true,  higherIsBetter: true  },
-  { key: 'assists',      averageLabel: 'Assists/10',  totalLabel: 'Assists',  hasTotal: true,  higherIsBetter: true  },
-  { key: 'deaths',       averageLabel: 'Deaths/10',   totalLabel: 'Deaths',   hasTotal: true,  higherIsBetter: false },
-  { key: 'damage',       averageLabel: 'Damage/10',   totalLabel: 'Damage',   hasTotal: true,  higherIsBetter: true  },
-  { key: 'healing',      averageLabel: 'Healing/10',  totalLabel: 'Healing',  hasTotal: true,  higherIsBetter: true  },
-  { key: 'kda',          averageLabel: 'KDA',         totalLabel: 'KDA',      hasTotal: false, higherIsBetter: true  },
-  { key: 'winrate',      averageLabel: 'Winrate %',   totalLabel: 'Winrate %',hasTotal: false, higherIsBetter: true  },
-  { key: 'games_played', averageLabel: 'Games Played',totalLabel: 'Games Played', hasTotal: false, higherIsBetter: true },
+  { key: 'eliminations', averageLabel: 'Elims/10',     totalLabel: 'Elims',        hasTotal: true,  higherIsBetter: true },
+  { key: 'assists',      averageLabel: 'Assists/10',   totalLabel: 'Assists',      hasTotal: true,  higherIsBetter: true },
+  { key: 'deaths',       averageLabel: 'Deaths/10',    totalLabel: 'Deaths',       hasTotal: true,  higherIsBetter: false},
+  { key: 'damage',       averageLabel: 'Damage/10',    totalLabel: 'Damage',       hasTotal: true,  higherIsBetter: true },
+  { key: 'healing',      averageLabel: 'Healing/10',   totalLabel: 'Healing',      hasTotal: true,  higherIsBetter: true },
+  { key: 'kda',          averageLabel: 'KDA',          totalLabel: 'KDA',          hasTotal: false, higherIsBetter: true },
+  { key: 'winrate',      averageLabel: 'Winrate %',    totalLabel: 'Winrate %',    hasTotal: false, higherIsBetter: true },
+  { key: 'games_played', averageLabel: 'Games Played', totalLabel: 'Games Played', hasTotal: false, higherIsBetter: true },
+  { key: 'time_played',  averageLabel: 'Time Played',  totalLabel: 'Time Played',  hasTotal: false, higherIsBetter: true },
 ];
 
 // ─── Helper: find the best value index in a row ───────────────────────────────
@@ -34,6 +35,7 @@ function formatValue(value, key) {
   if (key === 'winrate') return `${value.toFixed(1)}%`;
   if (key === 'damage' || key === 'healing' || key === 'games_played') return value.toLocaleString();
   if (key === 'kda') return value.toFixed(2);
+  if (key === 'time_played') return `${(value / 3600).toFixed(2)} hrs`;
   return value.toLocaleString();
 }
 
