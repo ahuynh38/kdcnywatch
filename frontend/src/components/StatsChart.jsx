@@ -46,11 +46,12 @@ function useWindowWidth() {
 }
 
 function CustomXTick({ x, y, payload, stats, compact }) {
-    const player = Object.values(stats).find(p => p.username === payload.value);
+    // payload.value is the battletag, so players sharing a username don't collide
+    const player = stats[payload.value];
     if (!player) return null;
 
     const size = 36;
-    const estimatedTextWidth = payload.value.length * 7.5;
+    const estimatedTextWidth = player.username.length * 7.5;
     const totalWidth = compact ? size : size + 6 + estimatedTextWidth;
 
     return (
@@ -75,14 +76,14 @@ function CustomXTick({ x, y, payload, stats, compact }) {
               fontSize={13}
               fill="#e8eaf0"
             >
-              {payload.value}
+              {player.username}
             </text>
           )}
         </g>
     );
 }
 
-export default function StatsChart({ stats, selectedStat, selectedRole, selectedView }) {
+export default function StatsChart({ stats, playerOrder, selectedStat, selectedRole, selectedView }) {
   const { averageLabel, totalLabel, hasTotal } = STAT_META[selectedStat];
   const path = hasTotal ? selectedView : null;
   const label = selectedView === 'average' ? averageLabel : totalLabel;
@@ -95,12 +96,12 @@ export default function StatsChart({ stats, selectedStat, selectedRole, selected
     return selectedRole === 'all' ? player.general : player.roles?.[selectedRole];
   }
 
-  const data = Object.entries(stats).map(([battletag, player]) => {
-    const base = getSource(player);
+  const data = playerOrder.map(battletag => {
+    const base = getSource(stats[battletag]);
     const value = (path ? base?.[path]?.[selectedStat] : base?.[selectedStat]) ?? 0;
 
     return {
-      name: player.username,
+      battletag,
       value,
     };
   });
@@ -111,13 +112,14 @@ export default function StatsChart({ stats, selectedStat, selectedRole, selected
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 25 }}>
           <XAxis
-            dataKey="name"
+            dataKey="battletag"
             tick={<CustomXTick stats={stats} compact={isCompact} />}
             interval={0}
           />
           <YAxis hide={isCompact} />
           <Tooltip
             formatter={(value) => formatValue(value, selectedStat)}
+            labelFormatter={(battletag) => stats[battletag]?.username ?? battletag}
             cursor={{ fill: 'rgba(255,255,255,0.05)' }}
             labelStyle={{ color: '#0f1117'}}
           />

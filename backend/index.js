@@ -41,7 +41,7 @@ app.listen(PORT, async () => {
   try {
     console.log('Fetching stats on startup...');
     await fetchAllPlayers();
-    console.log('Startup fetch omplete.');
+    console.log('Startup fetch complete.');
   } catch (err) {
     console.error('Startup fetch failed:', err.message);
   }

@@ -1,4 +1,10 @@
+import { useState, useCallback, useLayoutEffect } from 'react';
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { SortableContext, horizontalListSortingStrategy, sortableKeyboardCoordinates, useSortable } from '@dnd-kit/sortable';
 import styles from './StatsTable.module.css';
+
+// Column dragging is a desktop-only feature — touch devices keep the static table
+const CAN_DRAG = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 // ─── Stat definitions ─────────────────────────────────────────────────────────
 
@@ -39,28 +45,100 @@ function formatValue(value, key) {
   return value.toLocaleString();
 }
 
+// ─── Helper: style for a column that is moving during a drag ─────────────────
+// Shared by the header and every body cell so the whole column moves together
+
+function getColumnStyle(motion) {
+  if (!motion) return undefined;
+  return {
+    transform: motion.x ? `translate3d(${motion.x}px, 0, 0)` : undefined,
+    transition: motion.transition,
+  };
+}
+
+// ─── Draggable player header ──────────────────────────────────────────────────
+// Owns the sortable item and reports its horizontal offset up to the table,
+// since dnd-kit only tracks the header cell and not the body cells below it
+
+function SortablePlayerHeader({ tag, username, onMotionChange }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: tag,
+    disabled: !CAN_DRAG,
+  });
+  const x = transform?.x ?? 0;
+
+  useLayoutEffect(() => {
+    onMotionChange(tag, { x, transition, isDragging });
+  }, [tag, x, transition, isDragging, onMotionChange]);
+
+  return (
+    <th
+      ref={setNodeRef}
+      style={getColumnStyle({ x, transition })}
+      className={`${styles.playerCol}${CAN_DRAG ? ` ${styles.draggable}` : ''}${isDragging ? ` ${styles.dragging}` : ''}`}
+      {...attributes}
+      {...listeners}
+    >
+      {username}
+    </th>
+  );
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function StatsTable({ stats, selectedStat, onStatSelect, selectedRole, selectedView }) {
-  const entries = Object.entries(stats);
-  const battletags = entries.map(([tag]) => tag);
-  const players = entries.map(([, player]) => player);
+export default function StatsTable({ stats, playerOrder, onReorder, selectedStat, onStatSelect, selectedRole, selectedView }) {
+  const battletags = playerOrder;
+  const players = battletags.map(tag => stats[tag]);
+
+  // Per-column drag offsets, keyed by battletag
+  const [columnMotion, setColumnMotion] = useState({});
+
+  const handleMotionChange = useCallback((tag, motion) => {
+    setColumnMotion(prev => {
+      const current = prev[tag];
+      if (current && current.x === motion.x && current.transition === motion.transition && current.isDragging === motion.isDragging) {
+        return prev;
+      }
+      return { ...prev, [tag]: motion };
+    });
+  }, []);
+
+  const sensors = useSensors(
+    // Small distance threshold so a plain click on a header doesn't start a drag
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  function handleDragEnd({ active, over }) {
+    if (!over || active.id === over.id) return;
+    onReorder(active.id, over.id);
+  }
 
   function getSource(player) {
     return selectedRole === 'all' ? player.general : player.roles?.[selectedRole];
   }
 
+  function getCellClass(tag, baseClass) {
+    return `${baseClass}${columnMotion[tag]?.isDragging ? ` ${styles.dragging}` : ''}`;
+  }
+
   return (
     <div className={styles.wrapper}>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <table className={styles.table}>
         <thead>
           <tr>
             <th>Stat</th>
-            {players.map((player, idx) => (
-              <th key={battletags[idx]} className={styles.playerCol}>
-                {player.username}
-              </th>
-            ))}
+            <SortableContext items={battletags} strategy={horizontalListSortingStrategy}>
+              {players.map((player, idx) => (
+                <SortablePlayerHeader
+                  key={battletags[idx]}
+                  tag={battletags[idx]}
+                  username={player.username}
+                  onMotionChange={handleMotionChange}
+                />
+              ))}
+            </SortableContext>
           </tr>
         </thead>
         <tbody>
@@ -83,7 +161,8 @@ export default function StatsTable({ stats, selectedStat, onStatSelect, selected
                 {values.map((value, idx) => (
                   <td
                     key={battletags[idx]}
-                    className={`${styles.value}${idx === bestIdx ? ` ${styles.valueBest}` : '' }`}
+                    style={getColumnStyle(columnMotion[battletags[idx]])}
+                    className={getCellClass(battletags[idx], `${styles.value}${idx === bestIdx ? ` ${styles.valueBest}` : '' }`)}
                   >
                     {formatValue(value, key)}
                   </td>
@@ -93,6 +172,7 @@ export default function StatsTable({ stats, selectedStat, onStatSelect, selected
           })}
         </tbody>
       </table>
+      </DndContext>
     </div>
   );
 }

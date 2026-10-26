@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { arrayMove } from '@dnd-kit/sortable';
 import { usePlayerStats } from '../hooks/usePlayerStats.js';
 import PlayerGrid from '../components/PlayerGrid.jsx';
 import StatsTable from '../components/StatsTable.jsx';
@@ -11,6 +12,16 @@ import ViewToggle from '../components/ViewToggle.jsx';
 import styles from './Dashboard.module.css';
 
 const DEFAULT_STAT = 'winrate';
+
+// ─── Helper: reconcile the saved column order with the players in stats ──────
+// Keeps the user's order, drops players no longer in stats (removed or failed
+// fetch), and appends new players to the end
+
+function reconcileOrder(savedOrder, battletags) {
+  const kept = savedOrder.filter(tag => battletags.includes(tag));
+  const added = battletags.filter(tag => !kept.includes(tag));
+  return [...kept, ...added];
+}
 
 export default function Dashboard() {
   const {
@@ -27,6 +38,19 @@ export default function Dashboard() {
   const [selectedStat, setSelectedStat] = useState(DEFAULT_STAT);
   const [selectedRole, setSelectedRole] = useState('all');
   const [selectedView, setSelectedView] = useState('average');
+  // Intentionally not persisted — order resets to default on page load
+  const [savedOrder, setSavedOrder] = useState([]);
+
+  const playerOrder = useMemo(
+    () => reconcileOrder(savedOrder, Object.keys(stats)),
+    [savedOrder, stats]
+  );
+
+  function handleReorder(activeTag, overTag) {
+    const from = playerOrder.indexOf(activeTag);
+    const to = playerOrder.indexOf(overTag);
+    setSavedOrder(arrayMove(playerOrder, from, to));
+  }
 
   function handleStatSelect(statKey) {
     if (statKey === selectedStat) return;
@@ -88,6 +112,8 @@ export default function Dashboard() {
       <section className={styles.section}>
         <StatsTable
           stats={stats}
+          playerOrder={playerOrder}
+          onReorder={handleReorder}
           selectedStat={selectedStat}
           onStatSelect={handleStatSelect}
           selectedRole={selectedRole}
@@ -99,6 +125,7 @@ export default function Dashboard() {
       <section className={styles.section}>
         <StatsChart
           stats={stats}
+          playerOrder={playerOrder}
           selectedStat={selectedStat}
           selectedRole={selectedRole}
           selectedView={selectedView}

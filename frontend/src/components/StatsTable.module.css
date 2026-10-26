@@ -30,6 +30,26 @@
   text-align: center !important;
 }
 
+/* ── Column drag and drop ── */
+
+.draggable {
+  cursor: grab;
+  user-select: none;
+}
+
+.draggable:hover {
+  color: var(--text);
+}
+
+/* Applied to the header and every body cell of the column being dragged */
+.dragging {
+  position: relative;
+  z-index: 1;
+  background: var(--surface-raised);
+  box-shadow: var(--shadow);
+  cursor: grabbing;
+}
+
 .row {
   border-bottom: 1px solid var(--border);
   cursor: pointer;
