@@ -38,7 +38,11 @@ app.get('/health', (req, res) => {
 
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
-
-  await fetchAllPlayers();
-  console.log('Startup fetch complete.');
+  try {
+    console.log('Fetching stats on startup...');
+    await fetchAllPlayers();
+    console.log('Startup fetch omplete.');
+  } catch (err) {
+    console.error('Startup fetch failed:', err.message);
+  }
 });
