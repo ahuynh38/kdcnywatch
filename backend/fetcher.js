@@ -55,9 +55,25 @@ function mergePlayerData(summary, stats) {
   };
 }
 
+// ─── Track the in-flight fetch so readers can wait for fresh data ────────────
+
+let inFlight = null;
+
+export function waitForFetch() {
+  return inFlight ? inFlight.catch(() => {}) : Promise.resolve();
+}
+
 // ─── Fetch all tracked players and write results to stats.json ───────────────
 
-export async function fetchAllPlayers() {
+export function fetchAllPlayers() {
+  const run = runFetch().finally(() => {
+    if (inFlight === run) inFlight = null;
+  });
+  inFlight = run;
+  return run;
+}
+
+async function runFetch() {
   const players = getPlayers();
 
   const results = {};

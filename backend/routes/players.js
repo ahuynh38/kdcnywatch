@@ -1,6 +1,6 @@
 import express from 'express';
 import { getPlayers, getStatsByPlayer, getStats, addPlayer, removePlayer } from '../storage.js';
-import { fetchAllPlayers } from '../fetcher.js';
+import { fetchAllPlayers, waitForFetch } from '../fetcher.js';
 
 const router = express.Router();
 
@@ -19,8 +19,9 @@ router.get('/', (req, res) => {
 // ─── GET /players/stats ───────────────────────────────────────────────────────
 // Returns the full stats object for all players at once
 
-router.get('/stats', (req, res) => {
+router.get('/stats', async (req, res) => {
   try {
+    await waitForFetch();
     const stats = getStats();
     res.json(stats);
   } catch (err) {
@@ -32,8 +33,9 @@ router.get('/stats', (req, res) => {
 // ─── GET /players/:tag/stats ──────────────────────────────────────────────────
 // Returns the latest stats for a specific player
 
-router.get('/:tag/stats', (req, res) => {
+router.get('/:tag/stats', async (req, res) => {
   try {
+    await waitForFetch();
     const stats = getStatsByPlayer(req.params.tag);
     res.json(stats);
   } catch (err) {
