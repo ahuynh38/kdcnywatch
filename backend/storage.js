@@ -13,6 +13,8 @@ const STATS_FILE = path.join(DATA_DIR, 'stats.json');
 // ─── Generic Helpers ────────────────────────────────────────────────────────
 
 function readJSON(filePath) {
+  // stats.json is untracked, so it won't exist on a fresh deploy until the first fetch
+  if (!fs.existsSync(filePath)) return {};
   const raw = fs.readFileSync(filePath, 'utf-8');
   if (!raw.trim()) return {};
   return JSON.parse(raw);
