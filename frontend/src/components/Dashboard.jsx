@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
 import { arrayMove } from '@dnd-kit/sortable';
-import { usePlayerStats } from '../hooks/usePlayerStats.js';
 import PlayerGrid from '../components/PlayerGrid.jsx';
 import StatsTable from '../components/StatsTable.jsx';
 import StatsChart from '../components/StatsChart.jsx';
@@ -23,17 +22,15 @@ function reconcileOrder(savedOrder, battletags) {
   return [...kept, ...added];
 }
 
-export default function Dashboard() {
-  const {
-    stats,
-    players,
-    loading,
-    refreshing,
-    error,
-    handleRefresh,
-    handleAddPlayer,
-    handleRemovePlayer
-  } = usePlayerStats();
+export default function Dashboard({
+  stats,
+  players,
+  refreshing,
+  error,
+  handleRefresh,
+  handleAddPlayer,
+  handleRemovePlayer,
+}) {
 
   const [selectedStat, setSelectedStat] = useState(DEFAULT_STAT);
   const [selectedRole, setSelectedRole] = useState('all');
@@ -65,14 +62,6 @@ export default function Dashboard() {
   function handleViewSelect(view) {
     if (view === selectedView) return;
     setSelectedView(view);
-  }
-
-  if (loading) {
-    return (
-      <div className={styles.loading}>
-        <p>Loading stats...</p>
-      </div>
-    );
   }
 
   return (
